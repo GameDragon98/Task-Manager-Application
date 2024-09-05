@@ -1,10 +1,12 @@
 package Project;
 
+import java.nio.file.Files;
 import javax.swing.JOptionPane;
 
 public class MenuFrame extends javax.swing.JFrame {
 
     Database db = new Database();
+    FileManager fm = new FileManager();
 
     /**
      * Creates new form MenuFrame
@@ -50,6 +52,11 @@ public class MenuFrame extends javax.swing.JFrame {
         lblSelectTask1 = new javax.swing.JLabel();
         lblFileType = new javax.swing.JLabel();
         cmbFileType = new javax.swing.JComboBox<>();
+        lblView = new javax.swing.JLabel();
+        lblViewFile = new javax.swing.JLabel();
+        cmbFiles = new javax.swing.JComboBox<>();
+        btnView = new javax.swing.JButton();
+        jSeparator3 = new javax.swing.JSeparator();
         jSeparator1 = new javax.swing.JSeparator();
         jScrollPane2 = new javax.swing.JScrollPane();
         tblTasks = new javax.swing.JTable();
@@ -204,6 +211,25 @@ public class MenuFrame extends javax.swing.JFrame {
 
         cmbFileType.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { " ", "Text file", "CSV file" }));
 
+        lblView.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
+        lblView.setForeground(new java.awt.Color(51, 51, 51));
+        lblView.setText("View File:");
+
+        lblViewFile.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
+        lblViewFile.setForeground(new java.awt.Color(51, 51, 51));
+        lblViewFile.setText("Select File:");
+
+        cmbFiles.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { " " }));
+        cmbFiles.setSelectedIndex(-1);
+
+        btnView.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
+        btnView.setText("View");
+        btnView.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnViewActionPerformed(evt);
+            }
+        });
+
         lpBackground.setLayer(lblSearch, javax.swing.JLayeredPane.DEFAULT_LAYER);
         lpBackground.setLayer(txtSearch, javax.swing.JLayeredPane.DEFAULT_LAYER);
         lpBackground.setLayer(lblFilter, javax.swing.JLayeredPane.DEFAULT_LAYER);
@@ -229,6 +255,11 @@ public class MenuFrame extends javax.swing.JFrame {
         lpBackground.setLayer(lblSelectTask1, javax.swing.JLayeredPane.DEFAULT_LAYER);
         lpBackground.setLayer(lblFileType, javax.swing.JLayeredPane.DEFAULT_LAYER);
         lpBackground.setLayer(cmbFileType, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        lpBackground.setLayer(lblView, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        lpBackground.setLayer(lblViewFile, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        lpBackground.setLayer(cmbFiles, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        lpBackground.setLayer(btnView, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        lpBackground.setLayer(jSeparator3, javax.swing.JLayeredPane.DEFAULT_LAYER);
 
         javax.swing.GroupLayout lpBackgroundLayout = new javax.swing.GroupLayout(lpBackground);
         lpBackground.setLayout(lpBackgroundLayout);
@@ -237,49 +268,59 @@ public class MenuFrame extends javax.swing.JFrame {
             .addGroup(lpBackgroundLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(lpBackgroundLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(txtSearch)
-                    .addComponent(jSeparator2)
-                    .addGroup(lpBackgroundLayout.createSequentialGroup()
-                        .addComponent(cmbFilter, javax.swing.GroupLayout.PREFERRED_SIZE, 165, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 69, Short.MAX_VALUE)
-                        .addComponent(btnSearch))
                     .addGroup(lpBackgroundLayout.createSequentialGroup()
                         .addGroup(lpBackgroundLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(lblInsertTask)
-                            .addComponent(lblUpdateTask)
-                            .addComponent(lblSortBy)
-                            .addComponent(lblSearch)
-                            .addComponent(lblFilter, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(radAsc)
-                            .addComponent(radDesc)
-                            .addComponent(btnInsert, javax.swing.GroupLayout.PREFERRED_SIZE, 83, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(btnUpdate, javax.swing.GroupLayout.PREFERRED_SIZE, 83, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(lblRemoveTask)
+                            .addComponent(lblView)
+                            .addComponent(lblViewFile))
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(lpBackgroundLayout.createSequentialGroup()
+                        .addGroup(lpBackgroundLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jSeparator3)
+                            .addComponent(txtSearch)
                             .addGroup(lpBackgroundLayout.createSequentialGroup()
-                                .addComponent(cmbRemoveID, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(cmbFilter, javax.swing.GroupLayout.PREFERRED_SIZE, 165, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(btnSearch))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, lpBackgroundLayout.createSequentialGroup()
+                                .addGroup(lpBackgroundLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(lblSelectTask)
+                                    .addGroup(lpBackgroundLayout.createSequentialGroup()
+                                        .addComponent(cmbSelectTask, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(btnSave))
+                                    .addComponent(lblSaveTask)
+                                    .addComponent(lblInsertTask)
+                                    .addComponent(lblUpdateTask)
+                                    .addComponent(lblSortBy)
+                                    .addComponent(lblSearch)
+                                    .addComponent(lblFilter, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(radAsc)
+                                    .addComponent(radDesc)
+                                    .addComponent(btnInsert, javax.swing.GroupLayout.PREFERRED_SIZE, 83, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(btnUpdate, javax.swing.GroupLayout.PREFERRED_SIZE, 83, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(lblRemoveTask)
+                                    .addComponent(lblSelectTask1)
+                                    .addGroup(lpBackgroundLayout.createSequentialGroup()
+                                        .addComponent(cmbRemoveID, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(btnRemove, javax.swing.GroupLayout.PREFERRED_SIZE, 83, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addComponent(cmbFiles, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(btnRemove, javax.swing.GroupLayout.PREFERRED_SIZE, 83, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(lblSelectTask1)
-                            .addComponent(lblSelectTask)
-                            .addGroup(lpBackgroundLayout.createSequentialGroup()
-                                .addComponent(cmbSelectTask, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(btnSave))
-                            .addComponent(lblSaveTask))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addGroup(lpBackgroundLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addGroup(lpBackgroundLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                .addComponent(lblFileType)
-                                .addComponent(cmbFileType, javax.swing.GroupLayout.PREFERRED_SIZE, 82, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(lblExportTasks))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(btnExport)))
-                .addContainerGap())
+                                .addGroup(lpBackgroundLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(btnView)
+                                    .addGroup(lpBackgroundLayout.createSequentialGroup()
+                                        .addComponent(cmbFileType, javax.swing.GroupLayout.PREFERRED_SIZE, 82, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addGap(10, 10, 10)
+                                        .addComponent(btnExport))
+                                    .addComponent(lblExportTasks)
+                                    .addComponent(lblFileType)))
+                            .addComponent(jSeparator2))
+                        .addContainerGap())))
         );
         lpBackgroundLayout.setVerticalGroup(
             lpBackgroundLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(lpBackgroundLayout.createSequentialGroup()
-                .addGap(20, 20, 20)
+                .addContainerGap()
                 .addComponent(lblSearch)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(txtSearch, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -288,7 +329,7 @@ public class MenuFrame extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(lpBackgroundLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(btnSearch, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(cmbFilter))
+                    .addComponent(cmbFilter, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(14, 14, 14)
                 .addComponent(lblSortBy)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -307,30 +348,41 @@ public class MenuFrame extends javax.swing.JFrame {
                 .addComponent(lblRemoveTask)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(lblSelectTask1)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 8, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(lpBackgroundLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnRemove)
                     .addComponent(cmbRemoveID, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jSeparator2, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(lblView)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(lblViewFile)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(lpBackgroundLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(cmbFiles, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnView))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(lpBackgroundLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addComponent(jSeparator3, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(lpBackgroundLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(lpBackgroundLayout.createSequentialGroup()
-                        .addGroup(lpBackgroundLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(lblSaveTask)
-                            .addComponent(lblExportTasks))
+                        .addComponent(lblSaveTask)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(lblSelectTask)
                         .addGap(4, 4, 4)
                         .addGroup(lpBackgroundLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(cmbSelectTask, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(btnSave)
-                            .addComponent(cmbFileType, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(btnExport)))
+                            .addComponent(btnSave)))
                     .addGroup(lpBackgroundLayout.createSequentialGroup()
-                        .addGap(23, 23, 23)
-                        .addComponent(lblFileType)))
-                .addGap(53, 53, 53))
+                        .addComponent(lblExportTasks)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(lblFileType)
+                        .addGap(4, 4, 4)
+                        .addGroup(lpBackgroundLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(cmbFileType, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(btnExport))))
+                .addGap(18, 18, 18))
         );
 
         tblTasks.setModel(new javax.swing.table.DefaultTableModel(
@@ -350,13 +402,14 @@ public class MenuFrame extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                        .addComponent(jSeparator1)
-                        .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 532, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(jSeparator1)
+                            .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 532, Short.MAX_VALUE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(lpBackground, javax.swing.GroupLayout.PREFERRED_SIZE, 342, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(lblTitle))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(lpBackground, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
+                .addGap(6, 6, 6))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -364,19 +417,20 @@ public class MenuFrame extends javax.swing.JFrame {
                 .addContainerGap()
                 .addComponent(lblTitle)
                 .addGap(3, 3, 3)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jScrollPane2))
-                    .addComponent(lpBackground))
-                .addContainerGap())
+                    .addComponent(lpBackground, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(6, 6, 6))
         );
 
         pack();
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
+    // Refreshes the ComboBoxes with updated data by clearing data and adding data to prevent duplicates
     public void refreshcmbID() {
         cmbRemoveID.removeAllItems();
         cmbSelectTask.removeAllItems();
@@ -391,11 +445,13 @@ public class MenuFrame extends javax.swing.JFrame {
 
     private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
         db.createDB();
+        fm.folderExists();
     }//GEN-LAST:event_formWindowOpened
 
     private void formWindowActivated(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowActivated
         db.loadAll(tblTasks);
         refreshcmbID();
+        fm.populateFileComboBox(cmbFiles);
     }//GEN-LAST:event_formWindowActivated
 
     private void btnUpdateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUpdateActionPerformed
@@ -433,22 +489,35 @@ public class MenuFrame extends javax.swing.JFrame {
         String selectedTaskId = (String) cmbSelectTask.getSelectedItem();
         if (selectedTaskId != null) {
             String filePath = "task_" + selectedTaskId + ".txt";
-            db.saveTaskToFile(selectedTaskId, filePath);
-            db.displayFileProperties(filePath);
+            fm.saveTaskToFile(selectedTaskId, filePath);
+            fm.displayFileProperties(filePath);
         }
     }//GEN-LAST:event_btnSaveActionPerformed
 
     private void btnExportActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnExportActionPerformed
         if (cmbFileType.getSelectedItem().toString().equals("Text file")) {
-            db.exportTasksToTextFile("tasks_exported.txt");
-            db.displayFileProperties("tasks_exported.txt");
+            fm.exportTasksToTextFile("tasks_exported.txt");
+            fm.displayFileProperties("tasks_exported.txt");
         } else if (cmbFileType.getSelectedItem().toString().equals("CSV file")) {
-            db.exportTasksToCSV("tasks_exported.csv");
-            db.displayFileProperties("tasks_exported.csv");
+            fm.exportTasksToCSV("tasks_exported.csv");
+            fm.displayFileProperties("tasks_exported.csv");
         } else {
             JOptionPane.showMessageDialog(rootPane, "Please, select file type");
         }
     }//GEN-LAST:event_btnExportActionPerformed
+
+    private void btnViewActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnViewActionPerformed
+        if (Files.exists(fm.folderPath)) {
+            if (cmbFiles.getItemCount() == 0) {
+                JOptionPane.showMessageDialog(rootPane, "No files available to view");
+                return;
+            }
+            fm.displayTaskDetails(cmbFiles.getSelectedItem().toString());
+
+        } else {
+            JOptionPane.showMessageDialog(rootPane, "Folder doesn't exists");
+        }
+    }//GEN-LAST:event_btnViewActionPerformed
 
     public static void main(String args[]) {
 
@@ -489,14 +558,17 @@ public class MenuFrame extends javax.swing.JFrame {
     private javax.swing.JButton btnSave;
     private javax.swing.JButton btnSearch;
     private javax.swing.JButton btnUpdate;
+    private javax.swing.JButton btnView;
     private javax.swing.ButtonGroup buttonGroup1;
     private javax.swing.JComboBox<String> cmbFileType;
+    private javax.swing.JComboBox<String> cmbFiles;
     private javax.swing.JComboBox<String> cmbFilter;
     private javax.swing.JComboBox<String> cmbRemoveID;
     private javax.swing.JComboBox<String> cmbSelectTask;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JSeparator jSeparator1;
     private javax.swing.JSeparator jSeparator2;
+    private javax.swing.JSeparator jSeparator3;
     private javax.swing.JLabel lblExportTasks;
     private javax.swing.JLabel lblFileType;
     private javax.swing.JLabel lblFilter;
@@ -509,6 +581,8 @@ public class MenuFrame extends javax.swing.JFrame {
     private javax.swing.JLabel lblSortBy;
     private javax.swing.JLabel lblTitle;
     private javax.swing.JLabel lblUpdateTask;
+    private javax.swing.JLabel lblView;
+    private javax.swing.JLabel lblViewFile;
     private javax.swing.JLayeredPane lpBackground;
     private javax.swing.JRadioButton radAsc;
     private javax.swing.JRadioButton radDesc;

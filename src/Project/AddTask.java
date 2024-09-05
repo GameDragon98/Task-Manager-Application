@@ -208,7 +208,8 @@ public class AddTask extends javax.swing.JFrame {
         pack();
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
-
+    
+    // Clears all input fields in the form
     public void clearALl() {
         txtName.setText("");
         txtareaDescription.setText("");

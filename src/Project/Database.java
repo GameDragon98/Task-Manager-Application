@@ -6,13 +6,12 @@ import javax.swing.JComboBox;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
-import java.nio.file.*;
-import java.nio.file.attribute.BasicFileAttributes;
 
 public class Database {
 
     public final String url = "jdbc:sqlite:tasksDB";
 
+    // Sets up the database and creates tables if they don't already exist
     public void createDB() {
         String[] values = new String[]{"CREATE TABLE TasksTbl"
             + "(ID INTEGER PRIMARY KEY AUTOINCREMENT,"
@@ -67,6 +66,7 @@ public class Database {
         }
     }
 
+    // Loads all tasks from the database into the given table
     public void loadAll(JTable table) {
         File f = new File("tasksDB");
 
@@ -96,6 +96,7 @@ public class Database {
         }
     }
 
+    // Loads categories from the database into the given combo box
     public void loadCategory(JComboBox<String> category) {
         File f = new File("tasksDB");
 
@@ -123,6 +124,7 @@ public class Database {
         }
     }
 
+    // Searches for tasks based on the search term and column
     public void searchTasks(JTable table, String searchTerm, String selectedColumn) {
         File f = new File("tasksDB");
 
@@ -162,6 +164,7 @@ public class Database {
         }
     }
 
+    // Loads tasks into the table, sorted by ID in ascending or descending order
     public void loadSorted(JTable table, String sortOrder) {
         File f = new File("tasksDB");
 
@@ -193,6 +196,7 @@ public class Database {
         }
     }
 
+    // Loads all task IDs into the combo box
     public void loadID(JComboBox<String> taskID) {
         File f = new File("tasksDB");
 
@@ -220,6 +224,7 @@ public class Database {
         }
     }
 
+    // Removes a task based on the selected ID from the combo box
     public void removeTask(JComboBox<String> taskID) {
         File f = new File("tasksDB");
 
@@ -247,95 +252,4 @@ public class Database {
             }
         }
     }
-
-    public void saveTaskToFile(String taskId, String filePath) {
-        String sql = "SELECT * FROM TasksTbl WHERE ID = " + taskId;
-
-        try (
-                Connection connection = DriverManager.getConnection(url); Statement statement = connection.createStatement(); ResultSet rs = statement.executeQuery(sql); BufferedWriter writer = Files.newBufferedWriter(Paths.get(filePath))) {
-            if (rs.next()) {
-                writer.write(rs.getInt("ID") + ","
-                        + rs.getString("Name") + ","
-                        + rs.getString("Description") + ","
-                        + rs.getString("Completion_Status") + ","
-                        + rs.getString("Category"));
-                writer.newLine();
-                JOptionPane.showMessageDialog(null, "Task saved to file successfully.");
-            } else {
-                JOptionPane.showMessageDialog(null, "Task not found.");
-            }
-        } catch (SQLException | IOException e) {
-            JOptionPane.showMessageDialog(null, e.getMessage());
-        }
-    }
-
-    public void exportTasksToTextFile(String filePath) {
-        String sql = "SELECT * FROM TasksTbl";
-
-        try (
-                Connection connection = DriverManager.getConnection(url); Statement statement = connection.createStatement(); ResultSet rs = statement.executeQuery(sql); FileOutputStream fileOS = new FileOutputStream(filePath); OutputStreamWriter osWriter = new OutputStreamWriter(fileOS); BufferedWriter writer = new BufferedWriter(osWriter)) {
-            while (rs.next()) {
-                writer.write(rs.getInt("ID") + ","
-                        + rs.getString("Name") + ","
-                        + rs.getString("Description") + ","
-                        + rs.getString("Completion_Status") + ","
-                        + rs.getString("Category"));
-                writer.newLine();
-            }
-            JOptionPane.showMessageDialog(null, "Task saved to file successfully.");
-        } catch (SQLException e) {
-            JOptionPane.showMessageDialog(null, "Database error: " + e.getMessage());
-        } catch (IOException e) {
-            JOptionPane.showMessageDialog(null, "File error: " + e.getMessage());
-        }
-    }
-
-    public void exportTasksToCSV(String filePath) {
-        try (Connection connection = DriverManager.getConnection(url); Statement statement = connection.createStatement(); ResultSet rs = statement.executeQuery("SELECT * FROM TasksTbl"); BufferedWriter writer = Files.newBufferedWriter(Paths.get(filePath))) {
-
-            writer.write("ID,Name,Description,Completion_Status,Category");
-            writer.newLine();
-
-            while (rs.next()) {
-                writer.write(rs.getInt("ID") + ","
-                        + rs.getString("Name") + ","
-                        + rs.getString("Description") + ","
-                        + rs.getString("Completion_Status") + ","
-                        + rs.getString("Category"));
-                writer.newLine();
-            }
-            JOptionPane.showMessageDialog(null, "Tasks exported to CSV successfully.");
-        } catch (SQLException | IOException e) {
-            JOptionPane.showMessageDialog(null, e.getMessage());
-        }
-    }
-    
-    
-    public void readTasksFromTextFile(String filePath) {
-        try (FileInputStream fileIS = new FileInputStream(filePath); InputStreamReader isReader = new InputStreamReader(fileIS); BufferedReader bfReader = new BufferedReader(isReader)) {
-
-            String line;
-            while ((line = bfReader.readLine()) != null) {
-                System.out.println(line); // or process the line as needed
-            }
-        } catch (IOException e) {
-            JOptionPane.showMessageDialog(null, e.getMessage());
-        }
-    }
-    
-    
-    
-    public void displayFileProperties(String filePath) {
-        Path path = Paths.get(filePath);
-        try {
-            BasicFileAttributes attrs = Files.readAttributes(path, BasicFileAttributes.class);
-            JOptionPane.showMessageDialog(null,
-                    "File Size: " + attrs.size() + " bytes\n"
-                    + "Creation Time: " + attrs.creationTime() + "\n"
-                    + "Last Modified Time: " + attrs.lastModifiedTime());
-        } catch (IOException e) {
-            JOptionPane.showMessageDialog(null, e.getMessage());
-        }
-    }
-
 }

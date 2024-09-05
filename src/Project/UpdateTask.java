@@ -217,6 +217,7 @@ public class UpdateTask extends javax.swing.JFrame {
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
+    // Clears all input fields in the form
     public void clearALl() {
         txtUpdateName.setText("");
         txtareaUpdateDescription.setText("");
@@ -224,6 +225,7 @@ public class UpdateTask extends javax.swing.JFrame {
         cmbUpdateCategory.removeAllItems();
     }
 
+    // Populates the task category combo box with categories from the database
     public void populateCmbTaskCategory() {
         cmbSelectedTC.removeAllItems();
 
@@ -250,7 +252,8 @@ public class UpdateTask extends javax.swing.JFrame {
             }
         }
     }
-
+    
+    // Populates the tasks combo box based on the selected category
     public void populateCmbSelectedTask(String category) {
         cmbSelectedTask.removeAllItems();
         taskHashMap.clear();
@@ -280,7 +283,8 @@ public class UpdateTask extends javax.swing.JFrame {
             }
         }
     }
-
+    
+    // Fetches and displays task data, based on the selected task from the combo box
     public void returnData(String categoty) {
         File f = new File("tasksDB");
 
@@ -309,7 +313,8 @@ public class UpdateTask extends javax.swing.JFrame {
             }
         }
     }
-
+    
+    // Updates the selected task with new data from the input fields
     public void updateTask() {
         File f = new File("tasksDB");
 
