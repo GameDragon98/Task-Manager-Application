@@ -352,7 +352,6 @@ public class UpdateTask extends javax.swing.JFrame {
         updateTask();
         clearALl();
         db.loadCategory(cmbUpdateCategory);
-        populateCmbTaskCategory();
         if (cmbSelectedTC.getSelectedItem() != null) {
             populateCmbSelectedTask(cmbSelectedTC.getSelectedItem().toString());
         }
