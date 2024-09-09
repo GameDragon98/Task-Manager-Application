@@ -96,7 +96,6 @@ public class FileManager {
                     writer.newLine();
                 }
                 JOptionPane.showMessageDialog(null, "Tasks saved to file successfully.");
-                displayFileProperties(filePath);
             }
         } catch (SQLException | IOException e) {
             JOptionPane.showMessageDialog(null, e.getMessage());
@@ -128,7 +127,6 @@ public class FileManager {
                     writer.newLine();
                 }
                 JOptionPane.showMessageDialog(null, "Tasks exported to CSV successfully.");
-                displayFileProperties(filePath);
             }
         } catch (SQLException | IOException e) {
             JOptionPane.showMessageDialog(null, e.getMessage());
