@@ -225,6 +225,17 @@ public class UpdateTask extends javax.swing.JFrame {
         cmbUpdateCategory.removeAllItems();
     }
 
+    public boolean fieldsEmpty() {
+        if (txtUpdateName.getText().equals("")
+                || txtareaUpdateDescription.getText().equals("")
+                || cmbUpdateCategory.getSelectedItem().toString().equals("")) {
+            JOptionPane.showMessageDialog(rootPane, "Please select a task or complete all required fields");
+            return false;
+        } else {
+            return true;
+        }
+    }
+
     // Populates the task category combo box with categories from the database
     public void populateCmbTaskCategory() {
         cmbSelectedTC.removeAllItems();
@@ -252,7 +263,7 @@ public class UpdateTask extends javax.swing.JFrame {
             }
         }
     }
-    
+
     // Populates the tasks combo box based on the selected category
     public void populateCmbSelectedTask(String category) {
         cmbSelectedTask.removeAllItems();
@@ -283,7 +294,7 @@ public class UpdateTask extends javax.swing.JFrame {
             }
         }
     }
-    
+
     // Fetches and displays task data, based on the selected task from the combo box
     public void returnData(String categoty) {
         File f = new File("tasksDB");
@@ -313,37 +324,39 @@ public class UpdateTask extends javax.swing.JFrame {
             }
         }
     }
-    
+
     // Updates the selected task with new data from the input fields
     public void updateTask() {
-        File f = new File("tasksDB");
+        if (fieldsEmpty()) {
+            File f = new File("tasksDB");
 
-        if (f.exists()) {
-            try {
-                Connection connection = DriverManager.getConnection(url);
+            if (f.exists()) {
+                try {
+                    Connection connection = DriverManager.getConnection(url);
 
-                String sql = "UPDATE TasksTbl "
-                        + "SET Name = '" + txtUpdateName.getText() + "', "
-                        + "Description = '" + txtareaUpdateDescription.getText() + "', "
-                        + "Completion_Status = '" + cmbUpdateCompletionStatus.getSelectedItem() + "', "
-                        + "Category = '" + cmbUpdateCategory.getSelectedItem() + "' "
-                        + "WHERE ID = " + taskHashMap.get(cmbSelectedTask.getSelectedItem().toString());
+                    String sql = "UPDATE TasksTbl "
+                            + "SET Name = '" + txtUpdateName.getText() + "', "
+                            + "Description = '" + txtareaUpdateDescription.getText() + "', "
+                            + "Completion_Status = '" + cmbUpdateCompletionStatus.getSelectedItem() + "', "
+                            + "Category = '" + cmbUpdateCategory.getSelectedItem() + "' "
+                            + "WHERE ID = " + taskHashMap.get(cmbSelectedTask.getSelectedItem().toString());
 
-                Statement statement = connection.createStatement();
+                    Statement statement = connection.createStatement();
 
-                boolean res = statement.execute(sql);
+                    boolean res = statement.execute(sql);
 
-                if (!res) {
-                    JOptionPane.showMessageDialog(rootPane, "Data successfully updated");
-                } else {
-                    JOptionPane.showMessageDialog(rootPane, "Data could not be updated");
+                    if (!res) {
+                        JOptionPane.showMessageDialog(rootPane, "Data successfully updated");
+                    } else {
+                        JOptionPane.showMessageDialog(rootPane, "Data could not be updated");
+                    }
+
+                    statement.close();
+                    connection.close();
+
+                } catch (SQLException e) {
+                    JOptionPane.showMessageDialog(rootPane, e.getMessage());
                 }
-
-                statement.close();
-                connection.close();
-
-            } catch (SQLException e) {
-                JOptionPane.showMessageDialog(rootPane, e.getMessage());
             }
         }
     }
